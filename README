@@ -5,7 +5,7 @@
 
 ## 快速开始
 !!! 注意 重要
-通过解压工具解压resources/input/region_polygon.rar到resources/input/region_polygon.json
+通过解压工具解压data/region_polygon.rar到resources/input/region_polygon.json
 
 ```mvn clean package``` 执行命令构建jar包
 
