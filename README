@@ -22,7 +22,7 @@
 
 &nbsp;
 ## 使用示例
-
+## AcsApi.json() 建议单例调用，减少数据加载时长（2秒左右），匹配围栏大约10ms以内
 ```java
 import com.acs.efence.AcsApi;
 import com.acs.efence.model.CompareResult;
@@ -68,6 +68,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 public static void main(String[] args) {
+
+    // AcsApi.json() 建议单例调用，减少数据加载时长（2秒左右），匹配围栏大约10ms以内
     TempResult match = AcsApi.json().toMatch(new Point(113.910250, 27.687307), (result) -> new TempResult()
             .setProvinceCode(result.getProvinceCode())
             .setCityCode(result.getCityCode())
