@@ -1,0 +1,85 @@
+# 中国行政区域规划电子围栏(Java)
+
+## 适用场景
+`地理位置坐标所在行政区划编码`、`根据行政区域编码和地址位置坐标获取围栏状态`
+
+## 快速开始
+!!! 注意 重要
+通过解压工具解压resources/input/region_polygon.rar到resources/input/region_polygon.json
+
+```mvn clean package``` 执行命令构建jar包
+
+```mvn clean install -Dmaven.test.skip=true``` 执行命令安装依赖
+
+```xml
+<dependency>
+    <groupId>com.acs</groupId>
+    <artifactId>acs-electronic-fence</artifactId>
+    <version>1.0-RELEASE</version>
+</dependency>
+```
+将依赖引入到项目中
+
+&nbsp;
+## 使用示例
+
+```java
+import com.acs.efence.AcsApi;
+import com.acs.efence.model.CompareResult;
+import com.acs.efence.model.Point;
+
+/**
+ * 程序入口主方法。
+ * 本方法演示了如何使用AcsApi进行地理坐标与行政区划代码的比对。
+ * 
+ * @param args 命令行参数，本程序未使用这些参数。
+ */
+public static void main(String[] args) {
+    // 调用AcsApi的json方法，进一步调用toCompare方法，比对给定的行政区划代码和地理坐标是否匹配
+    CompareResult compareResult = AcsApi.json().toCompare("430121", new Point(113.910250, 27.687307));
+    
+    // 获取比对结果中的验证状态，以确定给定的坐标是否位于指定的行政区划内
+    // 是否命中围栏
+    Boolean verified = compareResult.getVerified();
+}
+
+```
+
+```java
+import com.acs.efence.AcsApi;
+import com.acs.efence.model.MatchResult;
+
+public static void main(String[] args) {
+    MatchResult matchResult = AcsApi.json().toMatch(new Point(113.910250, 27.687307));
+    // 省域编码
+    matchResult.getProvinceCode();
+    // 城市编码
+    matchResult.getCityCode();
+    // 区县编码
+    matchResult.getAreaCode();
+}
+```
+自定义返回结果
+
+```java
+import com.acs.efence.AcsApi;
+import com.acs.efence.model.MatchResult;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+public static void main(String[] args) {
+    TempResult match = AcsApi.json().toMatch(new Point(113.910250, 27.687307), (result) -> new TempResult()
+            .setProvinceCode(result.getProvinceCode())
+            .setCityCode(result.getCityCode())
+            .setDistrictCode(result.getAreaCode()));
+    // 处理后续业务...
+}
+
+@Data
+@Accessors(chain = true)
+class TempResult {
+    private String provinceCode;
+    private String cityCode;
+    private String districtCode;
+}
+```
